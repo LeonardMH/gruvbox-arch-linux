@@ -163,3 +163,5 @@ export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
 # Additional fzf configurations for ZSH
 export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers --line-range=:500 {}' 2>/dev/null || cat {}"
 export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window up:3:hidden:wrap --bind '?:toggle-preview'"
+
+export GITHUB_PERSONAL_ACCESS_TOKEN=$(gh auth token)
