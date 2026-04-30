@@ -19,7 +19,7 @@ show_dependencies() {
     echo "  sudo pacman -S hyprland waybar swaync foot fuzzel swaylock \\"
     echo "                 fzf zsh ttf-jetbrains-mono-nerd \\"
     echo "                 brightnessctl playerctl grim slurp wl-clipboard \\"
-    echo "                 swaybg pactl"
+    echo "                 swaybg pactl neovim tree-sitter"
     echo ""
     echo "Optional packages from AUR (yay):"
     echo ""
@@ -89,6 +89,27 @@ backup_and_link() {
     ln -s "$source" "$target"
 }
 
+# Copy a template to a target only if the target doesn't exist. Used for
+# files that contain secrets and therefore can't be symlinked from the
+# public dotfiles repo (e.g. wayvnc config with a password).
+install_template() {
+    local source="$1"
+    local target="$2"
+    local target_dir="$(dirname "$target")"
+
+    mkdir -p "$target_dir"
+
+    if [[ -e "$target" ]]; then
+        echo "Skipping $target (already exists — edit in place if needed)"
+        return
+    fi
+
+    echo "Copying template $source -> $target"
+    cp "$source" "$target"
+    chmod 600 "$target"
+    echo "  ! Edit $target and replace ADDRESS and PASSWORD before use"
+}
+
 echo "Installing configuration files..."
 
 # Hyprland configs
@@ -115,6 +136,10 @@ backup_and_link "$DOTFILES_DIR/gtk-3.0/gtk.css" "$HOME/.config/gtk-3.0/gtk.css"
 backup_and_link "$DOTFILES_DIR/ncspot/config.toml" "$HOME/.config/ncspot/config.toml"
 backup_and_link "$DOTFILES_DIR/swaylock/config" "$HOME/.config/swaylock/config"
 
+# wayvnc — template copy (not symlink) because the real config contains a
+# password. See wayvnc/config.template for the one-time setup steps.
+install_template "$DOTFILES_DIR/wayvnc/config.template" "$HOME/.config/wayvnc/config"
+
 # Sway configs
 backup_and_link "$DOTFILES_DIR/sway/config.d/gruvbox.conf" "$HOME/.config/sway/config.d/gruvbox.conf"
 
@@ -122,12 +147,16 @@ backup_and_link "$DOTFILES_DIR/sway/config.d/gruvbox.conf" "$HOME/.config/sway/c
 backup_and_link "$DOTFILES_DIR/zsh/zshrc" "$HOME/.zshrc"
 backup_and_link "$DOTFILES_DIR/zsh/themes/gruvbox.zsh-theme" "$HOME/.oh-my-zsh/themes/gruvbox.zsh-theme"
 
+# Neovim config
+backup_and_link "$DOTFILES_DIR/nvim" "$HOME/.config/nvim"
+
 echo "Installation complete!"
 echo ""
 echo "Next steps:"
 echo "   1. Restart your terminal or run 'source ~/.zshrc'"
 echo "   2. Restart Waybar: 'killall waybar && waybar &'"
 echo "   3. Reload Hyprland config: 'hyprctl reload'"
+echo "   4. Open neovim and run :Lazy to install plugins, then :MasonInstall <server> for LSP"
 echo ""
 echo "Your system now uses the Gruvbox color scheme!"
 echo ""
