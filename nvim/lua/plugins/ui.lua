@@ -73,6 +73,7 @@ return {
                 { "<leader>h", group = "git hunks" },
                 { "<leader>t", group = "terminal" },
                 { "<leader>b", group = "buffer" },
+                { "<leader>x", group = "diagnostics (trouble)" },
             })
         end,
     },
@@ -109,6 +110,71 @@ return {
             keymaps = {
                 -- Use <BS> to go up a directory (consistent with file manager muscle memory)
                 ["<BS>"] = "actions.parent",
+            },
+        },
+    },
+
+    -- Better diagnostics/quickfix panel
+    {
+        "folke/trouble.nvim",
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        keys = {
+            { "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", desc = "Workspace diagnostics (Trouble)" },
+            { "<leader>xX", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "Buffer diagnostics (Trouble)" },
+            { "<leader>xs", "<cmd>Trouble symbols toggle focus=false<cr>", desc = "Symbols (Trouble)" },
+            { "<leader>xl", "<cmd>Trouble loclist toggle<cr>", desc = "Location list (Trouble)" },
+            { "<leader>xq", "<cmd>Trouble qflist toggle<cr>", desc = "Quickfix list (Trouble)" },
+        },
+        opts = {
+            modes = {
+                diagnostics = {
+                    -- Show workspace diagnostics by default with buffer filter available
+                    auto_close = false,
+                    auto_preview = true,
+                },
+            },
+        },
+    },
+
+    -- Highlights TODO/FIXME/HACK/NOTE etc. with gruvbox colours
+    {
+        "folke/todo-comments.nvim",
+        event = { "BufReadPost", "BufNewFile" },
+        dependencies = { "nvim-lua/plenary.nvim" },
+        keys = {
+            { "<leader>ft", "<cmd>TodoTelescope<cr>", desc = "Find TODOs (telescope)" },
+            { "]t", function() require("todo-comments").jump_next() end, desc = "Next TODO" },
+            { "[t", function() require("todo-comments").jump_prev() end, desc = "Previous TODO" },
+        },
+        opts = {
+            -- Gruvbox-aligned highlight colours
+            keywords = {
+                FIX  = { color = "#fb4934" },   -- bright red
+                TODO = { color = "#fabd2f" },   -- bright yellow
+                HACK = { color = "#fe8019" },   -- bright orange
+                WARN = { color = "#d79921" },   -- yellow
+                NOTE = { color = "#8ec07c" },   -- bright aqua
+                TEST = { color = "#d3869b" },   -- bright purple
+            },
+        },
+    },
+
+    -- LSP progress notifications in the corner (replaces statusline spinner)
+    {
+        "j-hui/fidget.nvim",
+        event = "LspAttach",
+        opts = {
+            progress = {
+                display = {
+                    done_ttl = 2,
+                    progress_ttl = math.huge,
+                },
+            },
+            notification = {
+                window = {
+                    winblend = 0,  -- solid background, consistent with gruvbox
+                    border = "none",
+                },
             },
         },
     },

@@ -42,9 +42,7 @@ return {
                 map("<C-k>", vim.lsp.buf.signature_help, "Signature help")
                 map("<leader>rn", vim.lsp.buf.rename, "Rename symbol")
                 map("<leader>ca", vim.lsp.buf.code_action, "Code action")
-                map("<leader>f", function()
-                    vim.lsp.buf.format({ async = true })
-                end, "Format buffer")
+                -- <leader>f is owned by conform.nvim (with LSP fallback)
             end
 
             local default_setup = function(server_name)

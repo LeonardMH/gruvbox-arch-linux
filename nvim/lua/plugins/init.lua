@@ -17,6 +17,7 @@ require("lazy").setup({
     { import = "plugins.telescope" },
     { import = "plugins.ui" },
     { import = "plugins.editing" },
+    { import = "plugins.formatting" },
 }, {
     ui = { border = "rounded" },
     checker = {
