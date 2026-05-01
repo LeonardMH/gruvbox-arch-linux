@@ -68,7 +68,10 @@ return {
                     local names = lint.linters_by_ft[vim.bo.filetype] or {}
                     local available = vim.tbl_filter(function(name)
                         local ok = pcall(require, "lint.linters." .. name)
-                        return ok and vim.fn.executable(lint.linters[name].cmd) == 1
+                        if not ok then return false end
+                        local linter = lint.linters[name]
+                        local cmd = type(linter.cmd) == "function" and linter.cmd() or linter.cmd
+                        return type(cmd) == "string" and vim.fn.executable(cmd) == 1
                     end, names)
                     if #available > 0 then
                         lint.try_lint()
