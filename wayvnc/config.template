@@ -1,0 +1,24 @@
+# wayvnc config template
+#
+# This is a template tracked in the dotfiles repo. The real config lives at
+# ~/.config/wayvnc/config and contains the password in plaintext — never
+# commit the real file.
+#
+# On a new machine:
+#   1. Copy this file to ~/.config/wayvnc/config
+#   2. Replace ADDRESS with the Tailscale IP of this machine (`tailscale ip -4`)
+#   3. Replace PASSWORD with a strong, unique password
+#   4. Generate the RSA key:
+#        ssh-keygen -t rsa -b 2048 -m PEM -N "" -f ~/.config/wayvnc/rsa_key.pem
+#   5. Lock down permissions:
+#        chmod 600 ~/.config/wayvnc/config ~/.config/wayvnc/rsa_key.pem
+#
+# Binding to the Tailscale IP (not 0.0.0.0) means the server is only reachable
+# over the tailnet. No firewall rule is needed to keep it off the LAN.
+
+address=ADDRESS
+port=5900
+enable_auth=true
+username=mike
+password=PASSWORD
+rsa_private_key_file=/home/mike/.config/wayvnc/rsa_key.pem
