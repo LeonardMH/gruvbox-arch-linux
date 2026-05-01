@@ -2,7 +2,7 @@ local opt = vim.opt
 
 -- Line numbers
 opt.number = true
-opt.relativenumber = true
+opt.relativenumber = false
 
 -- Indentation (4-space default, overridden per filetype via treesitter/editorconfig)
 opt.tabstop = 4
@@ -18,7 +18,6 @@ opt.signcolumn = "yes"
 opt.scrolloff = 8
 opt.sidescrolloff = 8
 opt.wrap = false
-opt.colorcolumn = "100"
 
 -- Splits open in a natural reading direction
 opt.splitright = true
